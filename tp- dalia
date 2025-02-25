@@ -1,0 +1,114 @@
+use std::io;
+
+// Q1. Écrivez un programme qui imprime votre nom.
+fn print_my_name() {
+    println!("dalia");
+}
+
+// Q3. Écrivez une fonction qui vérifie si un nombre est divisible par n.
+fn divisible_par(num: i32, n: i32) -> bool {
+    num % n == 0
+}
+
+// Q5. Définissez une structure appelée Ordinateur qui définit la marque, le nom du processeur et la taille de la mémoire d'un ordinateur.
+//     
+struct Ordinateur {
+    marque: String,
+    processeur: String,
+    memoire: u32, // en Go
+}
+
+impl Ordinateur {
+    fn new(marque: &str, processeur: &str, memoire: u32) -> Self {
+        Ordinateur {
+            marque: marque.to_string(),
+            processeur: processeur.to_string(),
+            memoire,
+        }
+    }
+
+    fn display(&self) {
+        println!("Marque    : {}", self.marque);
+        println!("Processeur: {}", self.processeur);
+        println!("Mémoire   : {} Go", self.memoire);
+    }
+}
+
+fn main() {
+    // Q1. Imprimer votre nom.
+    print_my_name();
+
+    // Q2. Définissez deux variables et attribuez-leur une valeur numérique.
+    //     Affichez la valeur maximale entre les deux sans utiliser de variable temporaire.
+    let a = 42;
+    let b = 27;
+    println!(
+        "La valeur maximale entre {} et {} est : {}",
+        a,
+        b,
+        if a > b { a } else { b }
+    );
+
+    // Q3. Vérifier la divisibilité d'un nombre par n.
+    let nombre = 30;
+    let diviseur = 5;
+    println!(
+        "{} est divisible par {} : {}",
+        nombre,
+        diviseur,
+        divisible_par(nombre, diviseur)
+    );
+
+    // Q4. Définissez un tableau de nombres et affichez la valeur maximale.
+    let nombres = [12, 7, 33, 4, 15];
+    match nombres.iter().max() {
+        Some(max_val) => println!("Le maximum dans le tableau est : {}", max_val),
+        None => println!("Le tableau est vide"),
+    }
+
+    // Q5. Création d'instances d'Ordinateur.
+    let ordinateur1 = Ordinateur::new("Dell", "Intel Core i5", 8);
+    let ordinateur2 = Ordinateur::new("HP", "AMD Ryzen 5", 16);
+    let ordinateur3 = Ordinateur::new("Lenovo", "Intel Core i7", 32);
+
+    // Q6. Définissez un tableau avec des éléments de type Ordinateur.
+    let ordinateurs = vec![ordinateur1, ordinateur2, ordinateur3];
+
+    // Q6. Affichez un menu avec les options suivantes :
+    
+    loop {
+        println!("\nMenu:");
+        println!("a. Imprimer tous les ordinateurs");
+        println!("b. Imprimer l'ordinateur avec la plus grande quantité de mémoire");
+        println!("(Entrez une autre touche pour quitter)");
+
+        let mut choix = String::new();
+        io::stdin()
+            .read_line(&mut choix)
+            .expect("Erreur de lecture");
+        let choix = choix.trim();
+
+        match choix {
+            "a" => {
+                println!("\nListe de tous les ordinateurs :");
+                for o in &ordinateurs {
+                    o.display();
+                    println!("---------------------------");
+                }
+            }
+            "b" => {
+                match ordinateurs.iter().max_by_key(|o| o.memoire) {
+                    Some(ordi) => {
+                        println!("\nOrdinateur avec la plus grande quantité de mémoire :");
+                        ordi.display();
+                    }
+                    None => println!("Aucun ordinateur trouvé."),
+                }
+            }
+            _ => {
+                println!("Fin du programme.");
+                break;
+            }
+        }
+    }
+}
